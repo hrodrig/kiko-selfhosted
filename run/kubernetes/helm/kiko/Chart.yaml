@@ -1,0 +1,17 @@
+apiVersion: v2
+name: kiko
+description: Privacy-first web analytics collector
+type: application
+version: 0.1.0
+appVersion: "v0.1.0"
+keywords:
+  - analytics
+  - privacy
+  - web
+home: https://github.com/hrodrig/kiko
+sources:
+  - https://github.com/hrodrig/kiko
+maintainers:
+  - name: Hermes Rodriguez
+    url: https://github.com/hrodrig/kiko
+kubeVersion: ">=1.28.0"

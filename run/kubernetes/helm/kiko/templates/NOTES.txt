@@ -1,0 +1,13 @@
+1. Get the application URL:
+
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "kiko.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:8080
+
+2. Health checks:
+
+  curl -sS http://127.0.0.1:8080/api/v1/healthz
+  curl -sS http://127.0.0.1:8080/api/v1/readyz
+
+3. Add tracking script to your site:
+
+  <script defer src="{{ .Values.env.publicUrl }}/kiko.js"></script>

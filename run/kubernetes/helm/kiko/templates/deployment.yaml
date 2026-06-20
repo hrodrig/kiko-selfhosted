@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "kiko.fullname" . }}
+  labels:
+    {{- include "kiko.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "kiko.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kiko.labels" . | nindent 8 }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: kiko
+          image: {{ include "kiko.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+          args: ["serve"]
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.probes.liveness.path }}
+              port: http
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.probes.readiness.path }}
+              port: http
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+          env:
+            - name: KIKO_LISTEN
+              value: {{ .Values.env.listen | quote }}
+            - name: KIKO_PUBLIC_URL
+              value: {{ .Values.env.publicUrl | quote }}
+            - name: KIKO_LOG_LEVEL
+              value: {{ .Values.env.logLevel | quote }}
+            - name: KIKO_DATABASE_DRIVER
+              value: {{ .Values.database.driver | quote }}
+            - name: KIKO_BUFFER_FLUSH_INTERVAL
+              value: {{ .Values.env.bufferFlushInterval | quote }}
+            - name: KIKO_BUFFER_CAPACITY
+              value: {{ .Values.env.bufferCapacity | quote }}
+            {{- if .Values.env.allowedHosts }}
+            - name: KIKO_ALLOWED_HOSTS
+              value: {{ .Values.env.allowedHosts | quote }}
+            {{- end }}
+            {{- if eq .Values.database.driver "sqlite" }}
+            - name: KIKO_DATABASE_PATH
+              value: {{ .Values.database.sqlitePath | quote }}
+            {{- else if .Values.database.dsn }}
+            - name: KIKO_DATABASE_DSN
+              value: {{ .Values.database.dsn | quote }}
+            {{- else if or .Values.secrets.dsn .Values.secrets.existingSecret }}
+            - name: KIKO_DATABASE_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "kiko.databaseSecretName" . }}
+                  key: {{ .Values.secrets.secretKey }}
+            {{- end }}
+          volumeMounts:
+            {{- if and .Values.persistence.enabled (eq .Values.database.driver "sqlite") }}
+            - name: data
+              mountPath: {{ .Values.persistence.mountPath }}
+            {{- end }}
+            - name: tmp
+              mountPath: /tmp
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        {{- if and .Values.persistence.enabled (eq .Values.database.driver "sqlite") }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "kiko.fullname" . }}-data
+        {{- end }}
+        - name: tmp
+          emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

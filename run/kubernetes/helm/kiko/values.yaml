@@ -1,0 +1,83 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/hrodrig/kiko
+  tag: "v0.1.0"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 8080
+
+env:
+  listen: ":8080"
+  publicUrl: "https://analytics.example.com"
+  logLevel: info
+  allowedHosts: ""
+  bufferFlushInterval: "10"
+  bufferCapacity: "4096"
+
+database:
+  # sqlite | postgres | mysql
+  driver: sqlite
+  # SQLite path inside the container (requires persistence.enabled)
+  sqlitePath: /data/kiko.db
+  # When driver != sqlite, set dsn or use secrets.dsn
+  dsn: ""
+
+secrets:
+  create: false
+  # When set, chart creates a Secret with key "dsn" (postgres/mysql)
+  dsn: ""
+  existingSecret: ""
+  secretKey: dsn
+
+persistence:
+  enabled: true
+  size: 2Gi
+  storageClass: ""
+  accessModes:
+    - ReadWriteOnce
+  mountPath: /data
+
+probes:
+  liveness:
+    path: /api/v1/healthz
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  readiness:
+    path: /api/v1/readyz
+    initialDelaySeconds: 3
+    periodSeconds: 5
+
+# distroless nonroot (65532)
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  fsGroup: 65532
+  seccompProfile:
+    type: RuntimeDefault
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: "1"
+    memory: 256Mi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
