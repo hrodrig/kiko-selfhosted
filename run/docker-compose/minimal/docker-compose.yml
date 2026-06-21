@@ -23,4 +23,12 @@ services:
       KIKO_ALLOWED_HOSTS: ${KIKO_ALLOWED_HOSTS:-}
     volumes:
       - "${KIKO_HOST_DATA:?set KIKO_HOST_DATA in .env}/data:/data"
+    tmpfs:
+      - /tmp:size=64M
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    user: "65532:65532"
     logging: *default-logging
