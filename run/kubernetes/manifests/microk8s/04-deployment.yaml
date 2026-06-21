@@ -24,7 +24,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: kiko
-          image: ghcr.io/hrodrig/kiko:v0.1.0
+          image: ghcr.io/hrodrig/kiko:v0.4.0
           imagePullPolicy: IfNotPresent
           args: ["serve"]
           ports:
