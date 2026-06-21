@@ -1,6 +1,6 @@
 # kiko-selfhosted
 
-[![Version](https://img.shields.io/badge/version-0.1.0-blue)](https://github.com/hrodrig/kiko-selfhosted/releases)
+[![Version](https://img.shields.io/badge/version-0.1.1-blue)](https://github.com/hrodrig/kiko-selfhosted/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![App image on GHCR](https://img.shields.io/badge/image-ghcr.io%2Fhrodrig%2Fkiko-2496ED?logo=github)](https://github.com/hrodrig/kiko/pkgs/container/kiko)
 [![kiko app](https://img.shields.io/badge/app-hrodrig%2Fkiko-181717?logo=github)](https://github.com/hrodrig/kiko)
@@ -133,6 +133,8 @@ Filter knobs (`block_bots`, referrer spam, datacenter CIDRs, per-host rate limit
 | **Readiness** | `GET /api/v1/readyz` | DB reachable — `503` when backend is down |
 
 Both paths should stay **exempt from rate limiting** when that feature is enabled upstream.
+
+**kui** reads **`GET /api/v1/version`** (public, no auth) to display the connected kiko version.
 
 ---
 

@@ -4,13 +4,18 @@ All notable changes to **kiko-selfhosted** (deployment manifests) are documented
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [0.1.1] - 2026-06-20
+
+### Added
+
+- CODE_OF_CONDUCT.md (Contributor Covenant).
 
 ### Changed
 
 - Document v0.4.0 proxy/filter settings, binary install, and SPA snippet.
 - Pin default `KIKO_VERSION` / Helm examples to **v0.4.0**.
 - MicroK8s ConfigMap: `KIKO_FILTER_TRUST_PROXY=true` for Ingress setups.
+- Mention kui reads `GET /api/v1/version` in health probes section.
 
 ## [0.1.0] - 2026-06-19
 
