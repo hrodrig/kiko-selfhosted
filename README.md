@@ -7,6 +7,10 @@
 
 Deployment manifests for **[kiko](https://github.com/hrodrig/kiko)** — privacy-first web analytics collector. Compose, Helm, and **MicroK8s** raw YAML. **Application source:** [github.com/hrodrig/kiko](https://github.com/hrodrig/kiko).
 
+> **Note:** This repository covers **kiko alone** (the collector). Examples here are minimal and focused on collecting hits. If you are looking for a **complete stack with the kui dashboard** (users, roles, analytics UI), see **[github.com/hrodrig/kui-selfhosted](https://github.com/hrodrig/kui-selfhosted)** — the sibling repo that wires kiko + kui together with shared secrets, probes, and ingress.
+>
+> For **VPS best practices** (security hardening, firewall, Docker Compose setup), see **[gghstats-selfhosted VPS recommendations](https://github.com/hrodrig/gghstats-selfhosted/tree/main/run/vps-recommended)**.
+
 **Releases:** Root **`VERSION`** and Git tags **`v<semver>`** on **`main`** name repository snapshots. Work in progress lands on **`develop`** first.
 
 ---
