@@ -38,7 +38,7 @@ secrets:
 
 persistence:
   enabled: true
-  size: 2Gi
+  size: 24Gi
   storageClass: ""
   accessModes:
     - ReadWriteOnce
