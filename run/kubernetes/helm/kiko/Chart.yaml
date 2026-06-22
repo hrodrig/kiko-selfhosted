@@ -3,7 +3,7 @@ name: kiko
 description: Privacy-first web analytics collector
 type: application
 version: 0.1.0
-appVersion: "v0.4.0"
+appVersion: "v0.4.3"
 keywords:
   - analytics
   - privacy
