@@ -4,6 +4,15 @@ All notable changes to **kiko-selfhosted** (deployment manifests) are documented
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.3] - 2026-06-22
+
+### Changed
+
+- Bump kiko image references from **v0.4.3** to **v0.4.4** across Compose, Helm,
+  MicroK8s, and docs (`.env.example`, `README.md`, `values.yaml`, `Chart.yaml`).
+- Bump `appVersion` in Helm chart to `v0.4.4`.
+- Bump Helm chart `version` 0.1.0 → 0.1.1.
+
 ## [0.1.2] - 2026-06-21
 
 ### Changed

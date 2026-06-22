@@ -1,6 +1,6 @@
 # kiko-selfhosted
 
-[![Version](https://img.shields.io/badge/version-0.1.2-blue)](https://github.com/hrodrig/kiko-selfhosted/releases)
+[![Version](https://img.shields.io/badge/version-0.1.3-blue)](https://github.com/hrodrig/kiko-selfhosted/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![App image on GHCR](https://img.shields.io/badge/image-ghcr.io%2Fhrodrig%2Fkiko-2496ED?logo=github)](https://github.com/hrodrig/kiko/pkgs/container/kiko)
 [![kiko app](https://img.shields.io/badge/app-hrodrig%2Fkiko-181717?logo=github)](https://github.com/hrodrig/kiko)
@@ -41,7 +41,7 @@ Deployment manifests for **[kiko](https://github.com/hrodrig/kiko)** — privacy
 
 Shared env template: **[`run/common/.env.example`](run/common/.env.example)**. Walkthroughs: **[`run/README.md`](run/README.md)**.
 
-Default image tag in examples: **`v0.4.3`** ([kiko releases](https://github.com/hrodrig/kiko/releases)); override with **`KIKO_VERSION`** or **`KIKO_IMAGE`**.
+Default image tag in examples: **`v0.4.4`** ([kiko releases](https://github.com/hrodrig/kiko/releases)); override with **`KIKO_VERSION`** or **`KIKO_IMAGE`**.
 
 ---
 
@@ -70,7 +70,7 @@ From a clone of this repository:
 ```bash
 helm upgrade --install kiko run/kubernetes/helm/kiko \
   --namespace kiko --create-namespace \
-  --set image.tag=v0.4.3 \
+  --set image.tag=v0.4.4 \
   --set env.publicUrl=https://analytics.example.com
 ```
 
@@ -100,7 +100,7 @@ Install the static binary from [kiko releases](https://github.com/hrodrig/kiko/r
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/hrodrig/kiko/main/scripts/install.sh | sh
-# pin: VERSION=v0.4.3 sh install.sh
+# pin: VERSION=v0.4.4 sh install.sh
 ```
 
 Copy [`run/common/.env.example`](run/common/.env.example) to `/etc/kiko/kiko.yml` or export `KIKO_*` vars, then `kiko serve`. Use **systemd** unit from the [kiko repo](https://github.com/hrodrig/kiko/tree/main/contrib/systemd) when packaging for a VPS.
