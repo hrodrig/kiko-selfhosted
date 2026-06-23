@@ -111,7 +111,45 @@ Copy [`run/common/.env.example`](run/common/.env.example) to `/etc/kiko/kiko.yml
 
 When kiko sits behind Traefik, nginx, or an Ingress controller, enable **`KIKO_FILTER_TRUST_PROXY=true`** so visitor hashing uses the first **public** IP from `X-Forwarded-For` / `X-Real-IP`.
 
-**Verify forwarding** (does not record a hit when rejected):
+### Example: nginx
+
+```nginx
+location /kiko/kiko.js {
+    proxy_pass https://kiko-backend:8080/kiko.js;
+    proxy_set_header Host kiko-backend;
+    proxy_hide_header Content-Security-Policy;
+    proxy_cache_valid 200 1h;
+    expires 1h;
+    add_header Cache-Control "public";
+}
+
+location /kiko/api {
+    proxy_pass https://kiko-backend:8080/api;
+    proxy_set_header Host kiko-backend;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Real-IP $remote_addr;
+}
+
+location /kiko/api.gif {
+    proxy_pass https://kiko-backend:8080/api.gif;
+    proxy_set_header Host kiko-backend;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+}
+```
+
+Then load the script from your own domain:
+
+```html
+<script defer
+        src="https://your-domain.com/kiko/kiko.js"
+        data-endpoint="https://your-domain.com/kiko"
+        id="kiko-tracker">
+</script>
+```
+
+### Verify forwarding
+
+Does not record a hit when rejected:
 
 ```bash
 curl -sS -X POST 'https://analytics.example.com/hit' \
@@ -123,7 +161,15 @@ curl -sS -X POST 'https://analytics.example.com/hit' \
 
 Response JSON includes `client_ip`, `accepted`, and `reason`. Rejected ingest hits still return a GIF with **`X-Kiko-Dropped: 1`**.
 
+### Multi-environment (kiko + kui stack)
+
+When deploying the same site across multiple environments (e.g. `dev.example.com` and `example.com`), each environment needs its own `PUBLIC_KIKO_BASE` variable so the tracker points to the correct proxy path.
+
+**Full real-world example with Astro, CI/CD, and nginx — see [kui-selfhosted](https://github.com/hrodrig/kui-selfhosted#first-party-proxy-example).**
+
 **SPA sites:** load `kiko.js` with **`?hash=1`** when using hash-based routing; History API routes are tracked automatically.
+
+Anyone can audit the tracking script source at [github.com/hrodrig/kiko/blob/main/internal/server/kiko.js](https://github.com/hrodrig/kiko/blob/main/internal/server/kiko.js).
 
 Filter knobs (`block_bots`, referrer spam, datacenter CIDRs, per-host rate limits): see [kiko `configs/kiko.yml.sample`](https://github.com/hrodrig/kiko/blob/main/configs/kiko.yml.sample) and map via `KIKO_FILTER_*` in [`.env.example`](run/common/.env.example).
 
